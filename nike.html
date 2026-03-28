@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<title>Nike - Patika Nga Londra</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Koleksioni Nike - Këpucë origjinale Nike nga Londra. Air Force 1, Air Jordan 4 dhe shumë të tjera.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header" id="mainHeader">
+  <div class="header-inner">
+    <a href="index.html" class="logo">Patika Nga Londra</a>
+    <div class="nav-container">
+      <div class="dropdown-wrapper">
+        <div class="dropdown">
+          <i class="fas fa-bars"></i> Kategoritë
+        </div>
+        <div class="dropdown-menu">
+          <a href="nike.html" class="active">Nike</a>
+          <a href="adidas.html">Adidas</a>
+          <a href="puma.html">Puma</a>
+          <a href="newbalance.html">New Balance</a>
+          <a href="converse.html">Converse</a>
+          <a href="vans.html">Vans</a>
+          <a href="reebok.html">Reebok</a>
+        </div>
+      </div>
+      
+      <div class="cart-dropdown" id="cartDropdownBtn">
+        <i class="fas fa-shopping-cart"></i> Karta
+        <span class="cart-count">0</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="category-hero" style="background: linear-gradient(rgba(0,0,0,0.8), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1920&q=80') center/cover;">
+  <div class="hero-content">
+    <h1>Koleksioni Nike</h1>
+    <p>Këpucët më të fundit dhe më të njohura të Nike nga Londra</p>
+  </div>
+</section>
+
+<div class="category-page">
+  <!-- Filters Sidebar -->
+  <aside class="filters-sidebar">
+    <div class="filter-section">
+      <h3>Filtro Sipas Ngjyrës</h3>
+      <div class="filter-options" id="colorFilters">
+        <!-- Colors will be populated by JavaScript -->
+      </div>
+    </div>
+    
+    <div class="filter-section">
+      <h3>Filtro Sipas Madhësisë</h3>
+      <div class="filter-options" id="sizeFilters">
+        <!-- Sizes will be populated by JavaScript -->
+      </div>
+    </div>
+    
+    <div class="filter-section">
+      <h3>Filtro Sipas Çmimit</h3>
+      <div class="filter-price">
+        <input type="number" id="minPrice" placeholder="Min" min="0" max="500">
+        <span>-</span>
+        <input type="number" id="maxPrice" placeholder="Max" min="0" max="500">
+      </div>
+    </div>
+    
+    <div class="filter-section">
+      <h3>Rendit Sipas</h3>
+      <div class="sort-options">
+        <button class="sort-btn" data-sort="price-asc">Çmimi: Nga më i ulët</button>
+        <button class="sort-btn" data-sort="price-desc">Çmimi: Nga më i lartë</button>
+        <button class="sort-btn" data-sort="name-asc">Emri: A-Z</button>
+        <button class="sort-btn" data-sort="name-desc">Emri: Z-A</button>
+      </div>
+    </div>
+  </aside>
+  
+  <!-- Products Grid -->
+  <main class="category-products-container">
+    <div class="products-grid" id="categoryProducts">
+      <!-- Products will be loaded here by JavaScript -->
+    </div>
+  </main>
+</div>
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>Patika Nga Londra</h3>
+      <p>Ne ofrojmë këpucë origjinale të importuara direkt nga Londra. Cilësia më e lartë në çmime të volitshme.</p>
+      <div class="social-links">
+        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Kontakt</h3>
+      <ul class="footer-links">
+        <li><a href="#"><i class="fas fa-phone"></i> +355 69 123 4567</a></li>
+        <li><a href="#"><i class="fas fa-envelope"></i> info@patikangalondra.com</a></li>
+        <li><a href="#"><i class="fas fa-map-marker-alt"></i> Rruga Myslym Shyri, Tirana</a></li>
+        <li><a href="#"><i class="fas fa-clock"></i> E Hënë - E Shtunë: 9:00 - 20:00</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Shërbimet</h3>
+      <ul class="footer-links">
+        <li><a href="#"><i class="fas fa-shipping-fast"></i> Transporti Falas</a></li>
+        <li><a href="#"><i class="fas fa-exchange-alt"></i> Kthimi 30 Ditë</a></li>
+        <li><a href="#"><i class="fas fa-shield-alt"></i> Garancioni 2 Vjet</a></li>
+        <li><a href="#"><i class="fas fa-credit-card"></i> Pagesa në Dorëzim</a></li>
+      </ul>
+    </div>
+    
+    <div class="footer-section">
+      <h3>Lajme</h3>
+      <p>Abonohuni për ofertat tona ekskluzive dhe njoftime për produkte të reja.</p>
+      <div class="newsletter">
+        <input type="email" placeholder="Email juaj" style="width:100%; padding:12px; border-radius:8px; border:1px solid #333; margin-bottom:10px;">
+        <button style="width:100%; padding:12px; background:#e63946; color:white; border:none; border-radius:8px; font-weight:600;">Abonohu</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="footer-bottom">
+    <p>&copy; 2024 Patika Nga Londra. Të gjitha të drejtat e rezervuara. | Design: <span style="color:#e63946;">Patika Team</span></p>
+  </div>
+</footer>
+
+<!-- Modals -->
+<div class="modal" id="productModal"></div>
+<div class="modal" id="orderModal"></div>
+<div class="modal" id="successModal"></div>
+<div class="loading"><div class="spinner"></div></div>
+
+<script src="data.js"></script>
+<script src="main.js"></script>
+<script src="cart.js"></script>
+<script src="category.js"></script>
+<script>
+  // Header scroll behavior
+  let lastScrollTop = 0;
+  const header = document.getElementById('mainHeader');
+  
+  window.addEventListener('scroll', function() {
+    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    if (scrollTop > 100) {
+      header.classList.add('scrolled');
+    } else {
+      header.classList.remove('scrolled');
+    }
+    
+    if (scrollTop > lastScrollTop && scrollTop > 200) {
+      header.classList.add('hidden');
+    } else {
+      header.classList.remove('hidden');
+    }
+    
+    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+  });
+</script>
+</body>
+</html>

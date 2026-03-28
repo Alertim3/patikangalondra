@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+<meta charset="UTF-8">
+<title>Converse - Patika Nga Londra</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <a href="index.html" class="logo">Patika Nga Londra</a>
+    <nav class="nav">
+      <div class="dropdown">
+        <i class="fas fa-bars"></i> Kategoritë
+        <div class="dropdown-menu">
+          <a href="nike.html" class="category-link"><i class="fab fa-nike"></i> Nike</a>
+          <a href="adidas.html" class="category-link"><i class="fab fa-adidas"></i> Adidas</a>
+          <a href="puma.html" class="category-link"><i class="fas fa-paw"></i> Puma</a>
+          <a href="newbalance.html" class="category-link">New Balance</a>
+          <a href="converse.html" class="category-link active">Converse</a>
+        </div>
+      </div>
+    </nav>
+    <div class="cart-dropdown" id="cartDropdown">
+      <i class="fas fa-shopping-cart"></i> Karta
+      <span class="cart-count">0</span>
+    </div>
+  </div>
+</header>
+
+<section class="category-hero" style="--bg-image: url('https://images.unsplash.com/photo-1525966222134-fcfa99b8ae77?auto=format&fit=crop&w=1600&q=80')">
+  <div class="hero-content">
+    <h1>Koleksioni Converse</h1>
+    <p>Këpucët klasike të Converse nga Londra</p>
+  </div>
+</section>
+
+<main class="category-products" id="categoryProducts"></main>
+
+<footer class="footer">
+  <div class="footer-content">
+    <h2>Patika Nga Londra</h2>
+    <p>Na kontaktoni në: <strong>+355 69 123 4567</strong><br>
+    Email: <strong>info@patikangalondra.com</strong><br>
+    Adresa: <strong>Rruga Myslym Shyri, Tirana</strong></p>
+    <div class="social-icons">
+      <a href="#"><i class="fab fa-facebook"></i></a>
+      <a href="#"><i class="fab fa-instagram"></i></a>
+      <a href="#"><i class="fab fa-tiktok"></i></a>
+    </div>
+    <p>&copy; 2024 Patika Nga Londra. Të gjitha të drejtat e rezervuara.</p>
+  </div>
+</footer>
+
+<div class="modal" id="productModal"></div>
+<div class="modal" id="orderModal"></div>
+<div class="modal" id="successModal"></div>
+<div class="loading"><div class="spinner"></div></div>
+
+<script src="data.js"></script>
+<script src="category.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const converseProducts = [];
+    Object.keys(collectionsData).forEach(category => {
+      collectionsData[category].forEach(product => {
+        if (product.category === 'Converse') {
+          converseProducts.push(product);
+        }
+      });
+    });
+    renderCategoryProducts(converseProducts, 'Converse');
+  });
+</script>
+</body>
+</html>
