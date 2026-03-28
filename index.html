@@ -1,16 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="sq">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Title Here</title>
-    <script src="data.js"></script>
-    <script src="main.js"></script>
-    <script src="cart.js"></script>
-    <script src="app.js"></script>
+  <meta charset="UTF-8">
+  <title>Patika Nga Londra</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Këpucë origjinale premium nga Londra. Zgjedh nga koleksionet tona ekskluzive të Nike, Adidas, Puma dhe shumë të tjera.">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="./style.css">
+  <style>
+    body { margin: 0; font-family: 'Montserrat', sans-serif; }
+    .loading { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 3000; justify-content: center; align-items: center; }
+    .spinner { width: 60px; height: 60px; border: 5px solid #f3f3f3; border-top: 5px solid #e63946; border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+  </style>
 </head>
 <body>
-    <h1>Welcome to Your Website</h1>
-    <p>This is a sample HTML file.</p>
+
+<header class="header" id="mainHeader">
+  <div class="header-inner">
+    <a href="./index.html" class="logo">Patika Nga Londra</a>
+    <div class="nav-container">
+      <div class="dropdown-wrapper">
+        <div class="dropdown">
+          <i class="fas fa-bars"></i> Kategoritë
+        </div>
+        <div class="dropdown-menu">
+          <a href="./nike.html">Nike</a>
+          <a href="./adidas.html">Adidas</a>
+          <a href="./puma.html">Puma</a>
+          <a href="./newbalance.html">New Balance</a>
+          <a href="./converse.html">Converse</a>
+        </div>
+      </div>
+      <div class="cart-dropdown" id="cartDropdownBtn">
+        <i class="fas fa-shopping-cart"></i> Karta
+        <span class="cart-count">0</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-content">
+    <h1>Porosite Patikat Nga Shtëpia</h1>
+    <p>Zgjedh nga koleksionet tona ekskluzive të këpucëve sportive. Cilësi e garantuar, çmime konkurruese.</p>
+    <div class="hero-windows">
+      <div class="hero-window">
+        <h3>Porosite Falas</h3>
+        <p>Porosit çdo ditë, kudo në Shqipëri. Shërbim i shpejtë dhe i sigurt.</p>
+      </div>
+      <div class="hero-window">
+        <h3>Provo Patiken Pastaj Paguaj</h3>
+        <p>Ju provoni këpucën dhe paguani vetëm nëse ju pëlqen. 100% i sigurt.</p>
+      </div>
+    </div>
+    <div class="scroll-indicator" title="Scroll poshtë">
+      <i class="fas fa-chevron-down"></i>
+    </div>
+  </div>
+</section>
+
+<main class="collections" id="collections">
+  <!-- Content will be loaded by JavaScript -->
+</main>
+
+<footer class="footer">
+  <div class="footer-content">
+    <div class="footer-section">
+      <h3>Patika Nga Londra</h3>
+      <p>Ne ofrojmë këpucë origjinale të importuara direkt nga Londra. Cilësia më e lartë në çmime të volitshme.</p>
+      <div class="social-links">
+        <a href="#"><i class="fab fa-facebook-f"></i></a>
+        <a href="#"><i class="fab fa-instagram"></i></a>
+        <a href="#"><i class="fab fa-tiktok"></i></a>
+        <a href="#"><i class="fab fa-youtube"></i></a>
+      </div>
+    </div>
+    <div class="footer-section">
+      <h3>Kontakt</h3>
+      <ul class="footer-links">
+        <li><a href="#"><i class="fas fa-phone"></i> +355 69 123 4567</a></li>
+        <li><a href="#"><i class="fas fa-envelope"></i> info@patikangalondra.com</a></li>
+        <li><a href="#"><i class="fas fa-map-marker-alt"></i> Rruga Myslym Shyri, Tirana</a></li>
+        <li><a href="#"><i class="fas fa-clock"></i> E Hënë - E Shtunë: 9:00 - 20:00</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Shërbimet</h3>
+      <ul class="footer-links">
+        <li><a href="#"><i class="fas fa-shipping-fast"></i> Transporti Falas</a></li>
+        <li><a href="#"><i class="fas fa-exchange-alt"></i> Kthimi 30 Ditë</a></li>
+        <li><a href="#"><i class="fas fa-shield-alt"></i> Garancioni 2 Vjet</a></li>
+        <li><a href="#"><i class="fas fa-credit-card"></i> Pagesa në Dorëzim</a></li>
+      </ul>
+    </div>
+    <div class="footer-section">
+      <h3>Lajme</h3>
+      <p>Abonohuni për ofertat tona ekskluzive dhe njoftime për produkte të reja.</p>
+      <div class="newsletter">
+        <input type="email" placeholder="Email juaj" id="newsletterEmail" style="width:100%; padding:12px; border-radius:8px; border:1px solid #333; margin-bottom:10px;">
+        <button id="subscribeBtn" style="width:100%; padding:12px; background:#e63946; color:white; border:none; border-radius:8px; font-weight:600;">Abonohu</button>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>&copy; 2024 Patika Nga Londra. Të gjitha të drejtat e rezervuara. | Design: <span style="color:#e63946;">Patika Team</span></p>
+  </div>
+</footer>
+
+<!-- Modals -->
+<div class="modal" id="productModal"></div>
+<div class="modal" id="orderModal"></div>
+<div class="modal" id="successModal"></div>
+<div class="loading"><div class="spinner"></div></div>
+
+<!-- Load JavaScript files -->
+<script src="./data.js"></script>
+<script src="./main.js"></script>
+<script src="./cart.js"></script>
+
+<script>
+  // CSS Fallback
+  window.addEventListener('load', function() {
+    const styleSheets = Array.from(document.styleSheets);
+    const mainCSSLoaded = styleSheets.some(sheet => sheet.href && sheet.href.includes('style.css'));
+    if (!mainCSSLoaded) {
+      const fallbackStyle = document.createElement('style');
+      fallbackStyle.textContent = `
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; }
+        .header { background: #111; color: white; padding: 20px; position: fixed; width: 100%; top: 0; }
+        .hero { height: 100vh; background: #333; color: white; display: flex; align-items: center; justify-content: center; text-align: center; }
+        .product { border: 1px solid #ddd; padding: 20px; margin: 10px; }
+        .footer { background: #111; color: white; padding: 40px; text-align: center; }
+      `;
+      document.head.appendChild(fallbackStyle);
+    }
+  });
+  // Newsletter
+  document.getElementById('subscribeBtn')?.addEventListener('click', function() {
+    const email = document.getElementById('newsletterEmail').value;
+    if (email && email.includes('@')) {
+      alert('Faleminderit për abonimin! Do të merrni email me ofertat tona.');
+      document.getElementById('newsletterEmail').value = '';
+    } else {
+      alert('Ju lutem shkruani një email të vlefshëm.');
+    }
+  });
+</script>
 </body>
 </html>
