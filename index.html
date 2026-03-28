@@ -1,19 +1,20 @@
 <!DOCTYPE html>
 <html lang="sq">
 <head>
-  <meta charset="UTF-8">
-  <title>Patika Nga Londra</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Këpucë origjinale premium nga Londra. Zgjedh nga koleksionet tona ekskluzive të Nike, Adidas, Puma dhe shumë të tjera.">
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="./style.css">
-  <style>
-    body { margin: 0; font-family: 'Montserrat', sans-serif; }
-    .loading { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 3000; justify-content: center; align-items: center; }
-    .spinner { width: 60px; height: 60px; border: 5px solid #f3f3f3; border-top: 5px solid #e63946; border-radius: 50%; animation: spin 1s linear infinite; }
-    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-  </style>
+<meta charset="UTF-8">
+<title>Patika Nga Londra</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Këpucë origjinale premium nga Londra. Zgjedh nga koleksionet tona ekskluzive të Nike, Adidas, Puma dhe shumë të tjera.">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="stylesheet" href="./style.css">
+<style>
+  /* Inline fallback styles in case CSS doesn't load */
+  body { margin: 0; font-family: 'Montserrat', sans-serif; }
+  .loading { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 3000; justify-content: center; align-items: center; }
+  .spinner { width: 60px; height: 60px; border: 5px solid #f3f3f3; border-top: 5px solid #e63946; border-radius: 50%; animation: spin 1s linear infinite; }
+  @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+</style>
 </head>
 <body>
 
@@ -33,6 +34,7 @@
           <a href="./converse.html">Converse</a>
         </div>
       </div>
+      
       <div class="cart-dropdown" id="cartDropdownBtn">
         <i class="fas fa-shopping-cart"></i> Karta
         <span class="cart-count">0</span>
@@ -45,6 +47,7 @@
   <div class="hero-content">
     <h1>Porosite Patikat Nga Shtëpia</h1>
     <p>Zgjedh nga koleksionet tona ekskluzive të këpucëve sportive. Cilësi e garantuar, çmime konkurruese.</p>
+    
     <div class="hero-windows">
       <div class="hero-window">
         <h3>Porosite Falas</h3>
@@ -55,6 +58,7 @@
         <p>Ju provoni këpucën dhe paguani vetëm nëse ju pëlqen. 100% i sigurt.</p>
       </div>
     </div>
+    
     <div class="scroll-indicator" title="Scroll poshtë">
       <i class="fas fa-chevron-down"></i>
     </div>
@@ -71,12 +75,13 @@
       <h3>Patika Nga Londra</h3>
       <p>Ne ofrojmë këpucë origjinale të importuara direkt nga Londra. Cilësia më e lartë në çmime të volitshme.</p>
       <div class="social-links">
-        <a href="#"><i class="fab fa-facebook-f"></i></a>
-        <a href="#"><i class="fab fa-instagram"></i></a>
-        <a href="#"><i class="fab fa-tiktok"></i></a>
-        <a href="#"><i class="fab fa-youtube"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-tiktok"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-youtube"></i></a>
       </div>
     </div>
+    
     <div class="footer-section">
       <h3>Kontakt</h3>
       <ul class="footer-links">
@@ -86,6 +91,7 @@
         <li><a href="#"><i class="fas fa-clock"></i> E Hënë - E Shtunë: 9:00 - 20:00</a></li>
       </ul>
     </div>
+    
     <div class="footer-section">
       <h3>Shërbimet</h3>
       <ul class="footer-links">
@@ -95,6 +101,7 @@
         <li><a href="#"><i class="fas fa-credit-card"></i> Pagesa në Dorëzim</a></li>
       </ul>
     </div>
+    
     <div class="footer-section">
       <h3>Lajme</h3>
       <p>Abonohuni për ofertat tona ekskluzive dhe njoftime për produkte të reja.</p>
@@ -104,6 +111,7 @@
       </div>
     </div>
   </div>
+  
   <div class="footer-bottom">
     <p>&copy; 2024 Patika Nga Londra. Të gjitha të drejtat e rezervuara. | Design: <span style="color:#e63946;">Patika Team</span></p>
   </div>
@@ -121,11 +129,13 @@
 <script src="./cart.js"></script>
 
 <script>
-  // CSS Fallback
+  // Load CSS fallback if main CSS fails
   window.addEventListener('load', function() {
     const styleSheets = Array.from(document.styleSheets);
     const mainCSSLoaded = styleSheets.some(sheet => sheet.href && sheet.href.includes('style.css'));
+    
     if (!mainCSSLoaded) {
+      console.log('CSS failed to load, applying basic styles');
       const fallbackStyle = document.createElement('style');
       fallbackStyle.textContent = `
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -138,7 +148,32 @@
       document.head.appendChild(fallbackStyle);
     }
   });
-  // Newsletter
+
+  // Header scroll behavior
+  let lastScrollTop = 0;
+  const header = document.getElementById('mainHeader');
+  
+  if (header) {
+    window.addEventListener('scroll', function() {
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (scrollTop > 100) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+      
+      if (scrollTop > lastScrollTop && scrollTop > 200) {
+        header.classList.add('hidden');
+      } else {
+        header.classList.remove('hidden');
+      }
+      
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+    });
+  }
+
+  // Newsletter subscription
   document.getElementById('subscribeBtn')?.addEventListener('click', function() {
     const email = document.getElementById('newsletterEmail').value;
     if (email && email.includes('@')) {
@@ -148,6 +183,23 @@
       alert('Ju lutem shkruani një email të vlefshëm.');
     }
   });
+
+  // Ensure all scripts are loaded
+  window.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM fully loaded, all scripts should be loaded');
+    
+    // Check if main functions exist
+    if (typeof createModals === 'function') {
+      createModals();
+    }
+    
+    // Initialize cart
+    if (typeof updateCartCount === 'function') {
+      updateCartCount();
+    }
+  });
 </script>
 </body>
 </html>
+
+
