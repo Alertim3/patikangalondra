@@ -1,5 +1,67 @@
+// ----- Store API (same origin as this site; server serves /api and static files) -----
+// Stock and images are managed in /admin/ only. Orders go to POST /api/orders (Telegram on server).
+
+// Cache for the currently opened product modal: { [size]: stock_qty }
+let modalVariantStockBySize = {};
+let modalVariantColor = '';
+let modalStockLoaded = false;
+
+const PLACEHOLDER_PRODUCT_IMAGE =
+  'data:image/svg+xml,' +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400"><rect fill="#f0f0f0" width="400" height="400"/><text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="#999" font-family="system-ui,sans-serif" font-size="18">Shto foto në /admin/</text></svg>'
+  );
+
+const productImageById = {};
+
+async function hydrateProductImagesFromApi() {
+  productImageById = {};
+  try {
+    const res = await fetch('/api/store/product-images');
+    if (!res.ok) return;
+    const map = await res.json();
+    if (map && typeof map === 'object') Object.assign(productImageById, map);
+  } catch (_) {
+    /* offline or server not running */
+  }
+}
+
+function getProductImageUrl(productId) {
+  if (productId == null) return PLACEHOLDER_PRODUCT_IMAGE;
+  const fromAdmin = productImageById[productId];
+  if (fromAdmin && String(fromAdmin).trim() !== '') return String(fromAdmin).trim();
+  return PLACEHOLDER_PRODUCT_IMAGE;
+}
+
+async function fetchActiveVariantStock(productId, color) {
+  if (!productId || !color) return null;
+  try {
+    const u =
+      '/api/store/variant-stock?product_id=' +
+      encodeURIComponent(productId) +
+      '&color=' +
+      encodeURIComponent(color);
+    const res = await fetch(u);
+    if (!res.ok) return null;
+    const data = await res.json();
+    const map = data.map && typeof data.map === 'object' ? data.map : {};
+    const imageUrl = data.imageUrl ? String(data.imageUrl).trim() : '';
+    return { map, imageUrl };
+  } catch {
+    return null;
+  }
+}
+
+function isSizeInStock(size) {
+  const key = String(size);
+  if (!modalStockLoaded) return true; // don’t block user until stock is loaded
+  return (modalVariantStockBySize?.[key] ?? 0) > 0;
+}
+
 // ----- Main JavaScript for Homepage -----
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function () {
+  await hydrateProductImagesFromApi();
+
   // ----- Render Collections on Homepage -----
   const collectionsContainer = document.getElementById('collections');
   
@@ -28,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const card = document.createElement('div');
         card.className = 'product';
         card.innerHTML = `
-          <img src="${prod.image}" alt="${prod.name}" loading="lazy">
+          <img src="${getProductImageUrl(prod.id)}" alt="${prod.name}" loading="lazy">
           <strong>${prod.name}</strong>
           <span>${prod.price}</span>
           <button class="detail-btn">Shiko Detajet</button>
@@ -46,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         addToCartBtn.addEventListener('click', (e) => {
           e.stopPropagation();
-          addToCart(prod);
+          openProductDetail(prod);
         });
         
         productsEl.appendChild(card);
@@ -113,7 +175,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // ----- Product Detail Functions -----
 let currentProduct = null;
 
-function openProductDetail(product) {
+async function openProductDetail(product) {
   currentProduct = product;
   
   // Create modal if it doesn't exist
@@ -121,15 +183,72 @@ function openProductDetail(product) {
     createModals();
   }
   
-  document.getElementById('modalImg').src = product.image;
+  document.getElementById('modalImg').src = getProductImageUrl(product.id);
   document.getElementById('modalImg').alt = product.name;
   document.getElementById('modalName').textContent = product.name;
   document.getElementById('modalPrice').textContent = product.price;
   
-  // Reset form
-  document.getElementById('modalSize').value = '';
-  document.getElementById('modalColor').value = '';
-  document.getElementById('modalQuantity').value = 1;
+  // Build variant selectors from the product data
+  modalVariantColor = product?.color ? String(product.color) : '';
+  modalVariantStockBySize = {};
+  modalStockLoaded = false;
+
+  const modalSizeEl = document.getElementById('modalSize');
+  const modalColorEl = document.getElementById('modalColor');
+  const modalQuantityEl = document.getElementById('modalQuantity');
+
+  // Size options from product.sizeRange
+  if (modalSizeEl) {
+    const sizes = Array.isArray(product?.sizeRange) ? product.sizeRange : [];
+    modalSizeEl.innerHTML = `<option value="">Zgjidh madhësinë</option>` + sizes
+      .map((s) => `<option value="${String(s)}">${String(s)}</option>`)
+      .join('');
+    modalSizeEl.value = '';
+  }
+
+  // Color options: one fixed color per product (matches product.color in data.js)
+  if (modalColorEl) {
+    const colorVal = modalVariantColor;
+    modalColorEl.innerHTML = `<option value="">Zgjidh ngjyrën</option>` +
+      (colorVal ? `<option value="${colorVal}">${colorVal}</option>` : '');
+    modalColorEl.value = colorVal || '';
+  }
+
+  if (modalQuantityEl) modalQuantityEl.value = 1;
+
+  // Load stock for this product + color (and admin image URL for this variant)
+  if (modalVariantColor) {
+    const variantData = await fetchActiveVariantStock(product.id, modalVariantColor);
+    const stockMap = variantData?.map ?? {};
+    modalVariantStockBySize = stockMap;
+    modalStockLoaded = variantData != null;
+
+    if (variantData?.imageUrl) {
+      document.getElementById('modalImg').src = variantData.imageUrl;
+    }
+
+    if (modalStockLoaded && modalColorEl) {
+      // Select first in-stock size, if available
+      const sizes = Array.from(modalSizeEl?.options ?? []).map((o) => o.value).filter(Boolean);
+      const firstInStock = sizes.find((size) => isSizeInStock(size));
+      if (firstInStock) {
+        modalSizeEl.value = firstInStock;
+      }
+
+      // Disable out-of-stock sizes
+      if (modalSizeEl) {
+        Array.from(modalSizeEl.options).forEach((opt) => {
+          if (!opt.value) return; // placeholder
+          const inStock = isSizeInStock(opt.value);
+          opt.disabled = !inStock;
+        });
+      }
+
+      if (!firstInStock) {
+        showNotification('Ky produkt është aktualisht jashtë stokut për këtë ngjyrë.');
+      }
+    }
+  }
   
   document.getElementById('productModal').style.display = 'flex';
   document.body.style.overflow = 'hidden';
@@ -142,6 +261,11 @@ function addToCartFromModal() {
   
   if (!size || !color) {
     showNotification('Ju lutem zgjidhni madhësinë dhe ngjyrën!');
+    return;
+  }
+
+  if (!isSizeInStock(size)) {
+    showNotification('Ky variant është jashtë stokut.');
     return;
   }
   
@@ -159,6 +283,11 @@ function openOrderModal() {
     showNotification('Ju lutem zgjidhni madhësinë dhe ngjyrën!');
     return;
   }
+
+  if (!isSizeInStock(size)) {
+    showNotification('Ky variant është jashtë stokut.');
+    return;
+  }
   
   closeModal('productModal');
   document.getElementById('orderModal').style.display = 'flex';
@@ -166,56 +295,108 @@ function openOrderModal() {
 }
 
 // ----- Order Functions -----
-function submitOrder() {
-  const name = document.getElementById('inputName').value;
-  const surname = document.getElementById('inputSurname').value;
-  const city = document.getElementById('inputCity').value;
-  const street = document.getElementById('inputStreet').value;
-  const phone = document.getElementById('inputPhone').value;
-  
+async function submitOrder() {
+  const name = document.getElementById('inputName').value.trim();
+  const surname = document.getElementById('inputSurname').value.trim();
+  const city = document.getElementById('inputCity').value.trim();
+  const street = document.getElementById('inputStreet').value.trim();
+  const phone = document.getElementById('inputPhone').value.trim();
+  const emailEl = document.getElementById('inputEmail');
+  const commentEl = document.getElementById('inputComment');
+  const email = emailEl ? emailEl.value.trim() : '';
+  const comment = commentEl ? commentEl.value.trim() : '';
+
   if (!name || !surname || !city || !street || !phone) {
     showNotification('Ju lutem plotësoni të gjitha fushat e detyrueshme!');
     return;
   }
-  
-  // Validate phone number
+
   const phoneRegex = /^[+]?[0-9\s\-\(\)]{8,}$/;
   if (!phoneRegex.test(phone)) {
     showNotification('Ju lutem shkruani një numër telefoni të vlefshëm!');
     return;
   }
-  
-  // Show loading
-  document.querySelector('.loading').style.display = 'flex';
-  
-  // Simulate order processing
-  setTimeout(() => {
-    document.querySelector('.loading').style.display = 'none';
-    closeModal('orderModal');
-    document.getElementById('successModal').style.display = 'flex';
-    
-    // Reset form
-    ['inputName', 'inputSurname', 'inputCity', 'inputStreet', 'inputPhone', 'inputEmail', 'inputComment']
-      .forEach(id => {
-        const element = document.getElementById(id);
-        if (element) element.value = '';
-      });
-    
-    // Clear cart after successful order
-    clearCart();
-    
-    // Generate random order number
-    const orderNumber = Math.floor(100000 + Math.random() * 900000);
-    const orderNumberElement = document.getElementById('orderNumber');
-    if (orderNumberElement) {
-      orderNumberElement.textContent = orderNumber;
+
+  const cartSnapshot =
+    typeof cart !== 'undefined' && cart && cart.length > 0 ? cart.map((i) => ({ ...i })) : null;
+
+  let lines = [];
+
+  if (cartSnapshot && cartSnapshot.length > 0) {
+    lines = cartSnapshot.map((i) => ({
+      product_id: i.id,
+      size: i.size,
+      color: i.color,
+      quantity: i.quantity || 1,
+      name: i.name,
+      price: i.price,
+    }));
+  } else {
+    const size = document.getElementById('modalSize') && document.getElementById('modalSize').value;
+    const color = document.getElementById('modalColor') && document.getElementById('modalColor').value;
+    const quantity =
+      parseInt(document.getElementById('modalQuantity') && document.getElementById('modalQuantity').value, 10) || 1;
+    if (!currentProduct || !size || !color) {
+      showNotification('Mungon produkti ose madhësia/ngjyra. Hapni produktin dhe plotësoni fushat.');
+      return;
     }
-    
-    // Close success modal after 4 seconds
-    setTimeout(() => {
-      closeModal('successModal');
-    }, 4000);
-  }, 2000);
+
+    lines = [
+      {
+        product_id: currentProduct.id,
+        size,
+        color,
+        quantity,
+        name: currentProduct.name,
+        price: currentProduct.price,
+      },
+    ];
+  }
+
+  // Build server payload
+  const orderNumber = Math.floor(100000 + Math.random() * 900000);
+  const payload = {
+    orderNumber,
+    customer: { name, surname, city, street, phone, email, comment },
+    lines,
+  };
+
+  const loadingEl = document.querySelector('.loading');
+  if (loadingEl) loadingEl.style.display = 'flex';
+
+  try {
+    const res = await fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || !data?.ok) {
+      throw new Error(data?.error || 'Porosia dështoi');
+    }
+  } catch (err) {
+    if (loadingEl) loadingEl.style.display = 'none';
+    showNotification(`Dështoi porosia: ${err.message}. Sigurohu që serveri po punon (npm start).`);
+    return;
+  }
+
+  if (loadingEl) loadingEl.style.display = 'none';
+  closeModal('orderModal');
+  document.getElementById('successModal').style.display = 'flex';
+
+  ['inputName', 'inputSurname', 'inputCity', 'inputStreet', 'inputPhone', 'inputEmail', 'inputComment'].forEach(
+    (id) => {
+      const element = document.getElementById(id);
+      if (element) element.value = '';
+    }
+  );
+
+  clearCart();
+
+  const orderNumberElement = document.getElementById('orderNumber');
+  if (orderNumberElement) orderNumberElement.textContent = orderNumber;
+
+  setTimeout(() => closeModal('successModal'), 4000);
 }
 
 // ----- Modal Utility Functions -----
@@ -270,16 +451,10 @@ function createModals() {
             <label class="field-label">Madhësia</label>
             <select id="modalSize" class="field-control">
               <option value="">Zgjidh madhësinë</option>
-              <option>38</option><option>39</option><option>40</option>
-              <option>41</option><option>42</option><option>43</option>
-              <option>44</option><option>45</option>
             </select>
             <label class="field-label">Ngjyra</label>
             <select id="modalColor" class="field-control">
               <option value="">Zgjidh ngjyrën</option>
-              <option>E Bardhë</option><option>E Zezë</option>
-              <option>Gri</option><option>Blu</option>
-              <option>E Kuqe</option><option>Jeshile</option>
             </select>
             <label class="field-label">Sasia</label>
             <input type="number" id="modalQuantity" min="1" max="10" value="1" class="field-control">
@@ -350,3 +525,5 @@ window.openOrderModal = openOrderModal;
 window.submitOrder = submitOrder;
 window.closeModal = closeModal;
 window.createModals = createModals;
+window.hydrateProductImagesFromApi = hydrateProductImagesFromApi;
+window.getProductImageUrl = getProductImageUrl;

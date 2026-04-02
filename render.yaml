@@ -1,0 +1,24 @@
+# Render Blueprint (optional): New → Blueprint → connect repo with this file.
+# Edit `name`, `region`, and `plan` as needed.
+# Set ADMIN_KEY (and optional Telegram vars) in the Render dashboard if you omit them here.
+
+services:
+  - type: web
+    name: patika-store
+    runtime: node
+    region: frankfurt
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: "20"
+      - key: ADMIN_KEY
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false
+      # Uncomment if you attach a persistent disk at /data:
+      # - key: DB_PATH
+      #   value: /data/store.db

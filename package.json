@@ -1,0 +1,19 @@
+{
+  "name": "patika-store",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Patika storefront + admin API",
+  "main": "server/index.js",
+  "scripts": {
+    "start": "node server/index.js",
+    "seed": "node server/seed.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "better-sqlite3": "^11.7.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.2"
+  }
+}

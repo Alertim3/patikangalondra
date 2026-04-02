@@ -1,0 +1,9 @@
+.git
+.gitignore
+.cursor
+.dockerignore
+fly.toml
+*.plan.md
+**/.DS_Store
+Thumbs.db
+node_modules

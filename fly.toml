@@ -1,0 +1,20 @@
+# Fly.io — Node server (static site + /api + /admin)
+# Set secrets: fly secrets set ADMIN_KEY=... TELEGRAM_BOT_TOKEN=... TELEGRAM_CHAT_ID=...
+
+app = "patika-nga-londra-web"
+primary_region = "ams"
+
+[build]
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "stop"
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[vm]]
+  memory = "512mb"
+  cpu_kind = "shared"
+  cpus = 1

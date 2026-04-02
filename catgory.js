@@ -20,7 +20,7 @@ function renderCategoryProducts(products, categoryName) {
     const productCard = document.createElement('div');
     productCard.className = 'product';
     productCard.innerHTML = `
-      <img src="${product.image}" alt="${product.name}" loading="lazy">
+      <img src="${typeof window.getProductImageUrl === 'function' ? window.getProductImageUrl(product.id) : (product.image || '')}" alt="${product.name}" loading="lazy">
       <strong>${product.name}</strong>
       <span>${product.price}</span>
       <button class="detail-btn">Shiko Detajet</button>
@@ -30,7 +30,8 @@ function renderCategoryProducts(products, categoryName) {
     productCard.querySelector('.detail-btn').addEventListener('click', () => openProductDetail(product));
     productCard.querySelector('.add-to-cart-btn').addEventListener('click', (e) => {
       e.stopPropagation();
-      addToCart(product);
+      // Open modal so user selects size/color (needed for per-variant stock)
+      openProductDetail(product);
     });
     
     container.appendChild(productCard);
@@ -58,7 +59,11 @@ function getProductsByCategory(category) {
 }
 
 // ----- Initialize Category Page -----
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', async function () {
+  if (typeof window.hydrateProductImagesFromApi === 'function') {
+    await window.hydrateProductImagesFromApi();
+  }
+
   // Update cart count
   updateCartCount();
   
